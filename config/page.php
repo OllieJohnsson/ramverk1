@@ -44,8 +44,8 @@ return [
             "data" => [
                 "homeLink"      => "",
                 "siteLogoText"  => "ramverk1",
-                "siteLogoTextIcon" => "image/theme/leaf_40x40.png",
-                "siteLogoTextIconAlt" => "Löv-bild",
+                // "siteLogoTextIcon" => "image/theme/leaf_40x40.png",
+                // "siteLogoTextIconAlt" => "Löv-bild",
             ],
         ],
         [

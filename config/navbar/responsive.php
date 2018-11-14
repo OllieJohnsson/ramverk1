@@ -7,7 +7,7 @@ return [
     "id" => "rm-menu",
     "wrapper" => null,
     "class" => "rm-default rm-mobile",
- 
+
     // Here comes the menu items
     "items" => [
         [
@@ -48,6 +48,25 @@ return [
             "text" => "Verktyg",
             "url" => "verktyg",
             "title" => "Verktyg och möjligheter för utveckling.",
+        ],
+        [
+            "text" => "IP-validator",
+            "url" => "ip-validator",
+            "title" => "Redovisningstexter från kursmomenten.",
+            "submenu" => [
+                "items" => [
+                    [
+                        "text" => "IP-validator",
+                        "url" => "ip-validator",
+                        "title" => "IP-validator",
+                    ],
+                    [
+                        "text" => "IP-validator rest API",
+                        "url" => "ip-validator/rest-api",
+                        "title" => "IP-validator rest API",
+                    ],
+                ],
+            ],
         ],
     ],
 ];

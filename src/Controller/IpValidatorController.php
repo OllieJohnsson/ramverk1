@@ -4,7 +4,7 @@ namespace Oliver\Controller;
 
 use Anax\Commons\ContainerInjectableInterface;
 use Anax\Commons\ContainerInjectableTrait;
-use Oliver\ValidateIpTrait;
+use Oliver\Commons\ValidateIpTrait;
 
 // use Anax\Route\Exception\ForbiddenException;
 // use Anax\Route\Exception\NotFoundException;
@@ -30,6 +30,7 @@ class IpValidatorController implements ContainerInjectableInterface
      * @var string $db a sample member variable that gets initialised
      */
     private $db = "not active";
+    private $message = "";
 
 
 
@@ -46,6 +47,10 @@ class IpValidatorController implements ContainerInjectableInterface
         $this->db = "active";
     }
 
+    public function getMessage() : string
+    {
+        return $this->message;
+    }
 
 
     /**
@@ -58,31 +63,30 @@ class IpValidatorController implements ContainerInjectableInterface
      */
     public function indexAction() : object
     {
-        $title = "IP-Validator";
-        // $ipAddress = $this->di->request->getPost("ipAddress") ?? null;
+        $title = "Validera IP-adress";
         $ipAddress = $this->di->get("request")->getPost("ipAddress") ?? null;
 
-        $this->validateIP($ipAddress);
-        $message = "";
+        $ipObject = $this->validateIP($ipAddress);
 
-        if (!$this->type) {
-            $message = "<b>{$ipAddress}</b> är inte en giltig IP-adress.";
+        if (!$ipObject->type) {
+            $this->message = "<b>{$ipAddress}</b> är inte en giltig IP-adress.";
         } else {
-            $message = "<b>{$this->type}-adress:</b> {$this->ipAddress}";
+            $this->message = "<b>{$ipObject->type}-adress:</b> {$ipObject->address}";
         }
 
-        if ($this->host) {
-            $message = "{$message}<br><b>Domännamn:</b> {$this->host}";
+        if ($ipObject->host) {
+            $this->message = "{$this->message}<br><b>Domännamn:</b> {$ipObject->host}";
         }
 
         if ($ipAddress) {
-            $this->di->session->set("flashmessage", $message);
+            $this->di->get("session")->set("flashmessage", $this->message);
         }
 
         $page = $this->di->get("page");
-        $page->add("ip-validator/index", [
+        $page->add("ip/input", [
             "title" => $title,
-            "action" => "ip-validator"
+            "action" => "ip-validator",
+            "buttonTitle" => "Validera"
             ]
         );
 

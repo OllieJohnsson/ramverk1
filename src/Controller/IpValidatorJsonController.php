@@ -4,7 +4,7 @@ namespace Oliver\Controller;
 
 use Anax\Commons\ContainerInjectableInterface;
 use Anax\Commons\ContainerInjectableTrait;
-use Oliver\ValidateIpTrait;
+use Oliver\Commons\ValidateIpTrait;
 
 // use Anax\Route\Exception\ForbiddenException;
 // use Anax\Route\Exception\NotFoundException;
@@ -55,35 +55,40 @@ class IpValidatorJsonController implements ContainerInjectableInterface
      */
     public function indexAction() : object
     {
-        $title = "IP-validator REST API";
+        $title = "Validera IP-adress (REST API)";
         $page = $this->di->get("page");
 
-        $page->add("ip-validator/index", [
+        $page->add("ip/input", [
             "title" => $title,
             "action" => "ip-validator/rest-api/ip",
+            "buttonTitle" => "Validera"
             ]
         );
 
-        $page->add("ip-validator/test-routes");
+        $page->add("ip/test-routes", [
+            "route" => "ip-validator"
+        ]);
 
         return $page->render([
             "title" => $title
         ]);
     }
 
-    public function ipActionPost()
+    public function ipActionPost() : string
     {
         $ipAddress = $this->di->get("request")->getPost("ipAddress") ?? null;
-        $this->di->get("response")->redirect("ip-validator/rest-api/ip/{$ipAddress}");
+        $route = "ip-validator/rest-api/ip/{$ipAddress}";
+        $this->di->get("response")->redirect($route);
+        return $route;
     }
 
     public function ipActionGet($ipAddress) : array
     {
-        $this->validateIP($ipAddress);
+        $ipObject = $this->validateIP($ipAddress);
         $json = [
-            "ip" => $this->ipAddress,
-            "type" => $this->type,
-            "host" => $this->host
+            "ip" => $ipObject->address,
+            "type" => $ipObject->type,
+            "host" => $ipObject->host
         ];
         return [$json];
     }

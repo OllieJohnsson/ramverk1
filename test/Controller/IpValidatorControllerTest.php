@@ -35,16 +35,35 @@ class IpValidatorControllerTest extends TestCase
     }
 
 
-
-
     /**
-     * Test the route "index".
+     * Test the route "index" with IPv4-address.
      */
-    public function testIndexAction()
+    public function testIndexActionIpv4()
     {
-        $res = $this->controller->indexAction();
-        $this->assertInstanceOf(Anax\Response\ResponseUtility::class, $res);
+        $this->di->get("request")->setGlobals(["post" => ["ipAddress" => "1.1.1.1"]]);
+        $this->controller->indexAction();
+        $res = $this->controller->getMessage();
+        $this->assertContains("IPv4-adress", $res);
     }
 
+    /**
+     * Test the route "index" with IPv6-address.
+     */
+    public function testIndexActionIpv6()
+    {
+        $this->di->get("request")->setGlobals(["post" => ["ipAddress" => "fe80::200:f8ff:fe21:67cf"]]);
+        $this->controller->indexAction();
+        $res = $this->controller->getMessage();
+        $this->assertContains("IPv6-adress", $res);
+    }
 
+    /**
+     * Test the route "index" with invalid IP-address.
+     */
+    public function testIndexActionInvalid()
+    {
+        $this->controller->indexAction("1.apa.1.1");
+        $res = $this->controller->getMessage();
+        $this->assertContains("inte en giltig IP-adress", $res);
+    }
 }

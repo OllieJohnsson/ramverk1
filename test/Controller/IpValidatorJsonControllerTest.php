@@ -47,6 +47,16 @@ class IpValidatorJsonControllerTest extends TestCase
     /**
      * Test the route "ipActionGet".
      */
+    public function testIpActionPost()
+    {
+        $this->di->get("request")->setGlobals(["post" => ["ipAddress" => "1.1.1.1"]]);
+        $res = $this->controller->ipActionPost();
+        $this->assertEquals("ip-validator/rest-api/ip/1.1.1.1", $res);
+    }
+
+    /**
+     * Test the route "ipActionGet".
+     */
     public function testIpActionGet()
     {
         $res = $this->controller->ipActionGet("255.255.255.255");

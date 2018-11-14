@@ -51,7 +51,7 @@ return [
         [
             "text" => "IP-validator",
             "url" => "ip-validator",
-            "title" => "Redovisningstexter från kursmomenten.",
+            "title" => "IP-validator",
             "submenu" => [
                 "items" => [
                     [
@@ -63,6 +63,25 @@ return [
                         "text" => "IP-validator rest API",
                         "url" => "ip-validator/rest-api",
                         "title" => "IP-validator rest API",
+                    ],
+                ],
+            ],
+        ],
+        [
+            "text" => "IP-locator",
+            "url" => "ip-location",
+            "title" => "Redovisningstexter från kursmomenten.",
+            "submenu" => [
+                "items" => [
+                    [
+                        "text" => "IP-location",
+                        "url" => "ip-location",
+                        "title" => "IP-location",
+                    ],
+                    [
+                        "text" => "IP-location rest API",
+                        "url" => "ip-location/rest-api",
+                        "title" => "IP-location rest API",
                     ],
                 ],
             ],
