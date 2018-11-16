@@ -10,6 +10,9 @@
   font-weight: normal;
   src: url('../webfonts/SourceCodePro-Regular.ttf');
 }
+ul {
+  list-style: circle;
+}
 h1 {
   border: none;
 }
@@ -179,15 +182,28 @@ article .figure.right {
 }
 .button {
   background-color: #53d794;
-  color: white;
+  color: #1b7648;
   border: none;
   padding: 0.6rem 1.1rem;
   margin: 0 1rem;
   border-radius: 0.5rem;
   cursor: pointer;
 }
+.button:hover {
+  color: white;
+}
 form {
   margin: 2rem auto;
+}
+input {
+  padding: 0 0.5rem;
+  border-radius: 0.3rem;
+  border: 1px solid #ccc;
+}
+.input-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 .outer-wrap-footer {
   background-color: #eee;
