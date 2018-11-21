@@ -70,7 +70,7 @@ return [
         [
             "text" => "IP-locator",
             "url" => "ip-location",
-            "title" => "Redovisningstexter från kursmomenten.",
+            "title" => "IP-locator",
             "submenu" => [
                 "items" => [
                     [
@@ -82,6 +82,25 @@ return [
                         "text" => "IP-location rest API",
                         "url" => "ip-location/rest-api",
                         "title" => "IP-location rest API",
+                    ],
+                ],
+            ],
+        ],
+        [
+            "text" => "Väder",
+            "url" => "weather",
+            "title" => "Väder",
+            "submenu" => [
+                "items" => [
+                    [
+                        "text" => "Start",
+                        "url" => "weather",
+                        "title" => "Väder",
+                    ],
+                    [
+                        "text" => "REST API",
+                        "url" => "weather/rest-api",
+                        "title" => "Väder REST API",
                     ],
                 ],
             ],
