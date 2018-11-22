@@ -5,6 +5,9 @@ use Anax\Commons\ContainerInjectableInterface;
 use Anax\Commons\ContainerInjectableTrait;
 use Oliver\Weather\Weather;
 
+use Oliver\Weather\Exception\NotFloatException;
+use Oliver\Weather\Exception\InvalidCoordinatesException;
+
 /**
  *
  */
@@ -12,6 +15,8 @@ class WeatherController implements ContainerInjectableInterface
 {
     use ContainerInjectableTrait;
 
+    private $weather;
+    private $message;
 
 
     public function indexActionGet() : object
@@ -26,6 +31,8 @@ class WeatherController implements ContainerInjectableInterface
             "title" => $title
         ]);
     }
+
+
 
     public function indexActionPost()
     {
@@ -47,19 +54,28 @@ class WeatherController implements ContainerInjectableInterface
 
 
         try {
-            $weather = new Weather($darkSky, $lat, $long);
+            $this->weather = new Weather($darkSky, $lat, $long);
 
             $page->add("weather/location", [
-                "weather" => $weather->getWeather()
+                "weather" => $this->weather->getData()
             ]);
-        } catch (\Oliver\Weather\Exception\NotFloatException $e) {
-            $session->set("flashmessage", $e->getMessage());
-        } catch (\Oliver\Weather\Exception\InvalidCoordinatesException $e) {
-            $this->di->get("session")->set("flashmessage", $e->getMessage());
+        } catch (NotFloatException | InvalidCoordinatesException $e) {
+            $this->message = $e->getMessage();
+            $session->set("flashmessage", $this->message);
         }
 
         return $page->render([
             "title" => $title
         ]);
+    }
+
+
+    public function getWeather()
+    {
+        return $this->weather;
+    }
+    public function getMessage()
+    {
+        return $this->message;
     }
 }
