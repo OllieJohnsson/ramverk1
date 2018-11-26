@@ -1,13 +1,13 @@
 
 
 <h1><?= $title ?></h1>
-<form class="" action="" method="post">
-    <input type="text" name="lat" value="">
-    <input type="text" name="long" value="">
 
-    <select class="" name="type">
-        <option value="">Prognos</option>
-        <option value="time">Historik</option>
-    </select>
-    <button type="submit" name="button">Sök</button>
+<!-- <p>Sök efter en eller flera platser och få en väderprognos. Skriv in koordinater i formatet:</p>
+<code>latitud,longitud latitud,longitud latitud,longitud...</code> -->
+<?= $description ?>
+<form class="" action="" method="post">
+    <div class="input-row">
+        <input type="text" name="coordinates" value="">
+        <button type="submit" class="button" name="button">Sök</button>
+    </div>
 </form>

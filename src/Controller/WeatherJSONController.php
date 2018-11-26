@@ -11,14 +11,14 @@ use Oliver\Weather\Exception\InvalidLocationException;
 /**
  *
  */
-class WeatherController implements ContainerInjectableInterface
+class WeatherJSONController implements ContainerInjectableInterface
 {
     use ContainerInjectableTrait;
 
     private $weather;
     private $message;
 
-    private $title = "Väder";
+    private $title = "Väder (REST API)";
     private $description = "<p>Sök efter en eller flera platser och få en väderprognos i JSON-format. Skriv in koordinater i formatet:</p>
     <code>latitud,longitud latitud,longitud latitud,longitud...</code>";
 
@@ -40,33 +40,24 @@ class WeatherController implements ContainerInjectableInterface
     public function indexActionPost()
     {
         $request = $this->di->get("request");
-        $response = $this->di->get("response");
         $page = $this->di->get("page");
         $session = $this->di->get("session");
         $darkSky = $this->di->get("darkSky");
 
         $coordinates = $request->getPost("coordinates");
 
-        $page->add("weather/index", [
-            "title" => $this->title,
-            "description" => $this->description
-        ]);
-
-
         try {
             $this->weather = new Weather($darkSky);
-
-            $page->add("weather/location", [
-                "weather" => $this->weather->fetchWeather($coordinates)
-            ]);
+            return $this->weather->fetchWeather($coordinates, true);
         } catch (BadFormatException | InvalidLocationException $e) {
             $this->message = $e->getMessage();
             $session->set("flashmessage", $this->message);
+            $page->add("weather/index", [
+                "title" => $this->title,
+                "description" => $this->description
+            ]);
+            return $page->render(["title" => $this->title]);
         }
-
-        return $page->render([
-            "title" => $this->title
-        ]);
     }
 
 

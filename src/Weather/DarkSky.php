@@ -5,8 +5,7 @@ use Anax\Commons\ContainerInjectableInterface;
 use Anax\Commons\ContainerInjectableTrait;
 
 use Oliver\Weather\WeatherServiceInterface;
-use Oliver\Weather\Exception\InvalidCoordinatesException;
-use Oliver\Weather\Exception\NotFloatException;
+use Oliver\Weather\Exception\InvalidLocationException;
 
 
 /**
@@ -18,8 +17,7 @@ class DarkSky implements ContainerInjectableInterface, WeatherServiceInterface
 
     private $baseUrl;
     private $apiKey;
-    private $lat;
-    private $long;
+
 
     public function configure(array $config)
     {
@@ -27,51 +25,37 @@ class DarkSky implements ContainerInjectableInterface, WeatherServiceInterface
         $this->apiKey = $config["apiKey"];
     }
 
-    public function setLocation($lat, $long)
+
+    public function fetchWeather($coordinates) : array
     {
-        if (!floatval($lat)) {
-            throw new NotFloatException("Latitud hade inte rätt format");
+        $ch = [];
+        $mh = curl_multi_init();
+        for ($i = 0; $i < count($coordinates); $i++) {
+            $lat = $coordinates[$i]["lat"];
+            $long = $coordinates[$i]["long"];
+
+            $url = "$this->baseUrl/$this->apiKey/$lat,$long?units=si&lang=sv";
+
+            $ch[$i] = curl_init($url);
+            curl_setopt($ch[$i], CURLOPT_RETURNTRANSFER, true);
+            curl_multi_add_handle($mh, $ch[$i]);
         }
-        if (!floatval($long)) {
-            throw new NotFloatException("Longitud hade inte rätt format");
+
+        $running = null;
+        do {
+            curl_multi_exec($mh, $running);
+        } while ($running);
+
+        $results = [];
+        for ($i=0; $i < count($ch); $i++) {
+            $results[] = (json_decode(curl_multi_getcontent($ch[$i]), true));
+
+            if (array_key_exists("error", $results[$i])) {
+                $lat = $coordinates[$i]["lat"];
+                $long = $coordinates[$i]["long"];
+                throw new InvalidLocationException("Platsen hittades inte.<br>Latitud: <b>$lat</b><br>Longitud: <b>$long</b>");
+            }
         }
-        $this->lat = $lat;
-        $this->long = $long;
+        return $results;
     }
-
-    public function fetchWeather() : array
-    {
-
-
-        // $ch = curl_multi_init();
-        // curl_multi_setopt($ch, CURLOPT_URL, "$this->baseUrl/$this->apiKey/$this->lat,$this->long?units=si&lang=sv");
-        // curl_multi_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        // $res = curl_multi_exec($ch);
-        // curl_multi_close($ch);
-        // $json = json_decode($res, true);
-        //
-        // if (array_key_exists("error", $json)) {
-        //     throw new InvalidCoordinatesException("Platsen hittades inte.<br>Latitude: $this->lat<br>Longitude: $this->long");
-        // }
-        //
-        // return $json;
-
-
-
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "$this->baseUrl/$this->apiKey/$this->lat,$this->long?units=si&lang=sv");
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $res = curl_exec($ch);
-        curl_close($ch);
-        $json = json_decode($res, true);
-
-        if (array_key_exists("error", $json)) {
-            throw new InvalidCoordinatesException("Platsen hittades inte.<br>Latitude: $this->lat<br>Longitude: $this->long");
-        }
-
-        return $json;
-    }
-
-
 }

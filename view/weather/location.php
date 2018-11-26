@@ -1,55 +1,58 @@
 <?php
 namespace Anax\View;
 
-// echo "<pre>";
-// var_dump($weather);
-// echo "------";
-// echo $weather->currently->windSpeed;
-// var_dump($weather);
-
-// var_dump($weather->daily->data[0]);
-// var_dump($weather->daily->data);
-
+// var_dump($weather[0]);
 ?>
 
-<?php foreach ($weather->daily->data as $key => $day): ?>
-    <p>Dag <?= $key ?></p>
-    <p><?= $day->temperatureHigh ?></p>
-    <br>
+<?php foreach ($weather as $location): ?>
+    <div class="container-row">
+        <div class="info">
+            <table>
+                <h3>Översikt <?= $location->daily->icon ?></h3>
+                <tr>
+                    <td>Latitud: </td>
+                    <td nowrap><?= $location->latitude ?></td>
+                </tr>
+                <tr>
+                    <td>Longitud: </td>
+                    <td nowrap><?= $location->longitude ?></td>
+                </tr>
+                <tr>
+                    <td>Tidszon: </td>
+                    <td nowrap><?= $location->timezone ?></td>
+                </tr>
+            </table>
+            <p><?= $location->daily->summary ?></p>
+        </div>
+
+        <div class="container-col">
+            <iframe style="border: 1px solid #ccc;" width="425" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=<?= $location->longitude ?>%2C<?= $location->latitude ?>%2C<?= $location->longitude ?>%2C<?= $location->latitude ?>&amp;layer=mapnik&amp;marker=<?= $location->latitude ?>%2C<?= $location->longitude ?>"></iframe><br/><small><a href="https://www.openstreetmap.org/?mlat=<?= $location->latitude ?>&amp;mlon=<?= $location->longitude ?>#map=18/<?= $location->latitude ?>/<?= $location->longitude ?>">Visa större karta</a></small>
+        </div>
+    </div>
+
+
+    <div class="container-row">
+        <?php foreach ($location->daily->data as $day): ?>
+                <div class="info">
+                    <table>
+                        <h3><?= date("Y-m-d", $day->time)." ".$day->icon ?></h3>
+                        <tr>
+                            <td>Högst: </td>
+                            <td><?= $day->temperatureHigh."°C" ?></td>
+                        </tr>
+                        <tr>
+                            <td>Lägst: </td>
+                            <td><?= $day->temperatureLow."°C" ?></td>
+                        </tr>
+                    </table>
+                    <p><?= $day->summary ?></p>
+                </div>
+        <?php endforeach; ?>
+    </div>
+
+    <div class="container-row">
+
+    </div>
+
+
 <?php endforeach; ?>
-
-<div class="container-row">
-
-
-
-
-    <div class="info">
-        <table>
-            <h3>Vädret just nu</h3>
-            <tr>
-                <td>Latitud: </td>
-                <td nowrap><?= $weather->latitude ?></td>
-            </tr>
-            <tr>
-                <td>Longitud: </td>
-                <td nowrap><?= $weather->longitude ?></td>
-            </tr>
-            <tr>
-                <td>Temperatur: </td>
-                <td nowrap><?= $weather->currently->temperature ?>°C</td>
-            </tr>
-            <tr>
-                <td>Summering: </td>
-                <td nowrap><?= $weather->currently->summary ?></td>
-            </tr>
-            <tr>
-                <td>Ikon: </td>
-                <td nowrap><?= $weather->currently->icon ?></td>
-            </tr>
-        </table>
-    </div>
-
-    <div class="container-col">
-        <iframe style="border: 1px solid #ccc;" width="425" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=<?= $weather->longitude ?>%2C<?= $weather->latitude ?>%2C<?= $weather->longitude ?>%2C<?= $weather->latitude ?>&amp;layer=mapnik&amp;marker=<?= $weather->latitude ?>%2C<?= $weather->longitude ?>"></iframe><br/><small><a href="https://www.openstreetmap.org/?mlat=<?= $weather->latitude ?>&amp;mlon=<?= $weather->longitude ?>#map=18/<?= $weather->latitude ?>/<?= $weather->longitude ?>">Visa större karta</a></small>
-    </div>
-</div>

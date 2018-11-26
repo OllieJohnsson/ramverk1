@@ -1,12 +1,7 @@
 <?php
 namespace Oliver\Weather;
 
-// use Anax\Commons\ContainerInjectableInterface;
-// use Anax\Commons\ContainerInjectableTrait;
-//
-// use Oliver\Weather\Exception\InvalidCoordinatesException;
-// use Oliver\Weather\Exception\NotFloatException;
-
+use Oliver\Weather\Exception\BadFormatException;
 
 /**
  *
@@ -14,11 +9,6 @@ namespace Oliver\Weather;
 class Weather
 {
     private $service;
-
-    private $latitude;
-    private $longitude;
-    private $currently;
-    private $daily;
 
     private $icons = [
         "clear-day" => "☀️",
@@ -33,43 +23,61 @@ class Weather
         "partly-cloudy-night" => ""
     ];
 
-    function __construct($service, $latitude, $longitude)
+    function __construct($service)
     {
         $this->service = $service;
-        $this->fetchWeather($latitude, $longitude);
     }
 
 
-    public function fetchWeather(string $latitude, string $longitude)
+    public function parseCoordinates($coordinateString) : array
     {
-        $this->service->setLocation($latitude, $longitude);
-        $weatherJSON = $this->service->fetchWeather();
-        $this->latitude = $weatherJSON["latitude"];
-        $this->longitude = $weatherJSON["longitude"];
-        $this->currently = (object) $weatherJSON["currently"];
+        $coordinateStrings = explode(" ", $coordinateString);
+        $coordinates = [];
 
+        for ($i=0; $i < count($coordinateStrings); $i++) {
 
-        $this->daily = (object) $weatherJSON["daily"];
+            $values = explode(",", $coordinateStrings[$i]);
+            if (count($values) != 2) {
+                throw new BadFormatException("Värdet var fel formaterat!");
+            }
 
-        $data = $this->daily->data;
-        $this->daily->data = [];
-        foreach ($data as $key => $day) {
-            $this->daily->data["day$key"] = (object) $day;
+            $lat = $values[0];
+            $long = $values[1];
+            if (!floatval($lat)) {
+                throw new BadFormatException("Latituden <b>$lat</b> har fel format.");
+            }
+            if (!floatval($long)) {
+                throw new BadFormatException("Longituden <b>$long</b> har fel format.");
+            }
+
+            $coordinates[$i]["lat"] = explode(",", $coordinateStrings[$i])[0];
+            $coordinates[$i]["long"] = explode(",", $coordinateStrings[$i])[1];
         }
-        $iconName = $this->currently->icon;
-        $this->currently->icon = $this->icons[$iconName];
+        return $coordinates;
     }
 
 
-    public function getData() : object
+    public function fetchWeather(string $coordinateString, bool $json = false) : array
     {
-        return (object)[
-            "latitude" => strval($this->latitude),
-            "longitude" => strval($this->longitude),
-            "currently" => $this->currently,
-            "daily" => $this->daily
-        ];
+        $coordinates = $this->parseCoordinates($coordinateString);
+        $weatherJSON = $this->service->fetchWeather($coordinates);
+
+        if ($json) {
+            return [$weatherJSON];
+        }
+
+        $locations = [];
+
+        foreach ($weatherJSON as $key => $location) {
+            $locations[] = (object) $location;
+            $locations[$key]->daily = (object) $location["daily"];
+            $locations[$key]->daily->icon = $this->icons[$locations[$key]->daily->icon];
+
+            foreach ($locations[$key]->daily->data as $dataKey => $value) {
+                $locations[$key]->daily->data[$dataKey] = (object) $value;
+                $locations[$key]->daily->data[$dataKey]->icon = $this->icons[$locations[$key]->daily->data[$dataKey]->icon];
+            }
+        }
+        return $locations;
     }
-
-
 }
