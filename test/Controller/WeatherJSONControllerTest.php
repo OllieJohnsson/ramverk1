@@ -2,12 +2,12 @@
 
 use Anax\DI\DIFactoryConfig;
 use PHPUnit\Framework\TestCase;
-use Oliver\Controller\WeatherController;
+use Oliver\Controller\WeatherJSONController;
 
 /**
  * Test the SampleController.
  */
-class WeatherControllerTest extends TestCase
+class WeatherJSONControllerTest extends TestCase
 {
 
     // Create the di container.
@@ -29,9 +29,8 @@ class WeatherControllerTest extends TestCase
         $di = $this->di;
 
         // Setup the controller
-        $this->controller = new WeatherController();
+        $this->controller = new WeatherJSONController();
         $this->controller->setDI($this->di);
-        // $this->controller->initialize();
     }
 
 
@@ -41,7 +40,7 @@ class WeatherControllerTest extends TestCase
     public function testIndexActionGet()
     {
         $res = $this->controller->indexActionGet()->getBody();
-        $this->assertContains("Väder", $res);
+        $this->assertContains("Väder (REST API)", $res);
     }
 
     /**
@@ -50,11 +49,10 @@ class WeatherControllerTest extends TestCase
     public function testIndexActionPost()
     {
         $this->di->get("request")->setGlobals(["post" => ["coordinates" => "12,12"]]);
-        $this->controller->indexActionPost();
-        $coordinateString = $this->di->get("request")->getPost("coordinates");
+        $res = $this->controller->indexActionPost();
 
-        $this->assertEquals($this->controller->getWeather()->fetchWeather($coordinateString)[0]->latitude, "12");
-        $this->assertEquals($this->controller->getWeather()->fetchWeather($coordinateString)[0]->longitude, "12");
+        $this->assertEquals($res[0][0]["latitude"], "12");
+        $this->assertEquals($res[0][0]["longitude"], "12");
     }
 
 
@@ -64,9 +62,8 @@ class WeatherControllerTest extends TestCase
     public function testLatitudeFormat()
     {
         $this->di->get("request")->setGlobals(["post" => ["coordinates" => "fel,123"]]);
-        $this->controller->indexActionPost();
-
-        $this->assertEquals($this->controller->getMessage(), "Latituden <b>fel</b> har fel format.");
+        $res = $this->controller->indexActionPost();
+        $this->assertEquals($res[0]["error"], "Latituden <b>fel</b> har fel format.");
     }
 
     /**
@@ -75,8 +72,8 @@ class WeatherControllerTest extends TestCase
     public function testLongitudeFormat()
     {
         $this->di->get("request")->setGlobals(["post" => ["coordinates" => "12,lala"]]);
-        $this->controller->indexActionPost();
-        $this->assertEquals($this->controller->getMessage(), "Longituden <b>lala</b> har fel format.");
+        $res = $this->controller->indexActionPost();
+        $this->assertEquals($res[0]["error"], "Longituden <b>lala</b> har fel format.");
     }
 
     /**
@@ -85,19 +82,7 @@ class WeatherControllerTest extends TestCase
     public function testInvalidCoordinates()
     {
         $this->di->get("request")->setGlobals(["post" => ["coordinates" => "1000,1000"]]);
-        $this->controller->indexActionPost();
-        $this->assertEquals($this->controller->getMessage(), "Platsen hittades inte.<br>Latitud: <b>1000</b><br>Longitud: <b>1000</b>");
+        $res = $this->controller->indexActionPost();
+        $this->assertEquals($res[0]["error"], "Platsen hittades inte.<br>Latitud: <b>1000</b><br>Longitud: <b>1000</b>");
     }
-
-    /**
-     * Test the error message if coordinates are in bad format.
-     */
-    public function testBadFormatCoordinates()
-    {
-        $this->di->get("request")->setGlobals(["post" => ["coordinates" => "1000"]]);
-        $this->controller->indexActionPost();
-        $this->assertEquals($this->controller->getMessage(), "Värdet var fel formaterat!");
-    }
-
-
 }
