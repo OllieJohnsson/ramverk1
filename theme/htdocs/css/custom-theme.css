@@ -120,7 +120,8 @@ body * {
   border: none;
 }
 .inner-wrap-main pre *,
-.inner-wrap-main code {
+.inner-wrap-main code,
+.inner-wrap-main .hljs {
   font-family: 'Code-font';
   font-size: 1rem;
   border: none;

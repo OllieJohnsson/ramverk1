@@ -31,18 +31,20 @@ class Weather
 
     public function parseCoordinates($coordinateString) : array
     {
-        $coordinateStrings = explode(" ", $coordinateString);
+        $coordinateStrings = explode("&", $coordinateString);
         $coordinates = [];
 
         for ($i=0; $i < count($coordinateStrings); $i++) {
 
             $values = explode(",", $coordinateStrings[$i]);
+
             if (count($values) != 2) {
                 throw new BadFormatException("Värdet var fel formaterat!");
             }
 
             $lat = $values[0];
             $long = $values[1];
+
             if (!floatval($lat)) {
                 throw new BadFormatException("Latituden <b>$lat</b> har fel format.");
             }

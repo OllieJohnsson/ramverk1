@@ -19,8 +19,7 @@ class WeatherController implements ContainerInjectableInterface
     private $message;
 
     private $title = "Väder";
-    private $description = "<p>Sök efter en eller flera platser och få en väderprognos i JSON-format. Skriv in koordinater i formatet:</p>
-    <code>latitud,longitud latitud,longitud latitud,longitud...</code>";
+    private $description = "<p>Sök efter en eller flera platser och få en väderprognos för den kommande veckan";
 
 
     public function indexActionGet() : object
@@ -68,7 +67,6 @@ class WeatherController implements ContainerInjectableInterface
             "title" => $this->title
         ]);
     }
-
 
     public function getWeather()
     {

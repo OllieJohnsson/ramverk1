@@ -14,5 +14,10 @@ return [
             "mount" => "rest-api",
             "handler" => "\Oliver\Controller\WeatherJsonController",
         ],
+        [
+            "info" => "Väder dokumentation",
+            "path" => "documentation",
+            "handler" => "\Anax\Content\FileBasedContentController",
+        ],
     ]
 ];

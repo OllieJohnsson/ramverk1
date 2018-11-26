@@ -49,7 +49,17 @@ class WeatherJSONControllerTest extends TestCase
     public function testIndexActionPost()
     {
         $this->di->get("request")->setGlobals(["post" => ["coordinates" => "12,12"]]);
-        $res = $this->controller->indexActionPost();
+        $res = $this->controller->indexActionPost("12,12");
+        $this->assertEquals($res, "weather/rest-api/coordinates/12,12");
+    }
+
+    /**
+     * Test latitude and longitude.
+     */
+    public function testLatLong()
+    {
+        $this->di->get("request")->setGlobals(["post" => ["coordinates" => "12,12"]]);
+        $res = $this->controller->coordinatesActionGet("12,12");
 
         $this->assertEquals($res[0][0]["latitude"], "12");
         $this->assertEquals($res[0][0]["longitude"], "12");
@@ -61,8 +71,8 @@ class WeatherJSONControllerTest extends TestCase
      */
     public function testLatitudeFormat()
     {
-        $this->di->get("request")->setGlobals(["post" => ["coordinates" => "fel,123"]]);
-        $res = $this->controller->indexActionPost();
+        // $this->di->get("request")->setGlobals(["post" => ["coordinates" => "fel,123"]]);
+        $res = $this->controller->coordinatesActionGet("fel,123");
         $this->assertEquals($res[0]["error"], "Latituden <b>fel</b> har fel format.");
     }
 
@@ -71,8 +81,8 @@ class WeatherJSONControllerTest extends TestCase
      */
     public function testLongitudeFormat()
     {
-        $this->di->get("request")->setGlobals(["post" => ["coordinates" => "12,lala"]]);
-        $res = $this->controller->indexActionPost();
+        // $this->di->get("request")->setGlobals(["post" => ["coordinates" => "12,lala"]]);
+        $res = $this->controller->coordinatesActionGet("12,lala");
         $this->assertEquals($res[0]["error"], "Longituden <b>lala</b> har fel format.");
     }
 
@@ -81,8 +91,8 @@ class WeatherJSONControllerTest extends TestCase
      */
     public function testInvalidCoordinates()
     {
-        $this->di->get("request")->setGlobals(["post" => ["coordinates" => "1000,1000"]]);
-        $res = $this->controller->indexActionPost();
+        // $this->di->get("request")->setGlobals(["post" => ["coordinates" => "1000,1000"]]);
+        $res = $this->controller->coordinatesActionGet("1000,1000");
         $this->assertEquals($res[0]["error"], "Platsen hittades inte.<br>Latitud: <b>1000</b><br>Longitud: <b>1000</b>");
     }
 }

@@ -5,6 +5,7 @@ namespace Anax\View;
 ?>
 
 <?php foreach ($weather as $location): ?>
+    <h1><?= $location->timezone ?></h1>
     <div class="container-row">
         <div class="info">
             <table>
@@ -30,12 +31,12 @@ namespace Anax\View;
         </div>
     </div>
 
-
-    <div class="container-row">
+    <h3>Prognos</h3>
+    <div class="container-row" style="overflow: scroll; width: 45rem; margin-bottom: 6rem;">
         <?php foreach ($location->daily->data as $day): ?>
                 <div class="info">
                     <table>
-                        <h3><?= date("Y-m-d", $day->time)." ".$day->icon ?></h3>
+                        <h3 nowrap><?= date("Y-m-d", $day->time)." ".$day->icon ?></h3>
                         <tr>
                             <td>Högst: </td>
                             <td><?= $day->temperatureHigh."°C" ?></td>
