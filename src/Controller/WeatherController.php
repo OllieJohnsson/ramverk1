@@ -3,8 +3,8 @@ namespace Oliver\Controller;
 
 use Anax\Commons\ContainerInjectableInterface;
 use Anax\Commons\ContainerInjectableTrait;
-use Oliver\Weather\Weather;
 
+use Oliver\Weather\Weather;
 use Oliver\Weather\Exception\BadFormatException;
 use Oliver\Weather\Exception\InvalidLocationException;
 
@@ -51,7 +51,6 @@ class WeatherController implements ContainerInjectableInterface
             "description" => $this->description
         ]);
 
-
         try {
             $this->weather = new Weather($darkSky);
 
@@ -62,11 +61,11 @@ class WeatherController implements ContainerInjectableInterface
             $this->message = $e->getMessage();
             $session->set("flashmessage", $this->message);
         }
-
         return $page->render([
             "title" => $this->title
         ]);
     }
+
 
     public function getWeather()
     {

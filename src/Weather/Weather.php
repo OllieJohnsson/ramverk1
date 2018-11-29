@@ -1,6 +1,7 @@
 <?php
 namespace Oliver\Weather;
 
+use Oliver\Weather\WeatherServiceInterface;
 use Oliver\Weather\Exception\BadFormatException;
 
 /**
@@ -23,7 +24,7 @@ class Weather
         "partly-cloudy-night" => ""
     ];
 
-    function __construct($service)
+    function __construct(WeatherServiceInterface $service)
     {
         $this->service = $service;
     }

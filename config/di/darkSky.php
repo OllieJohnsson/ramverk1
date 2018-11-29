@@ -9,15 +9,14 @@ return [
             // "active" => true,
             "shared" => false,
             "callback" => function () {
-                $darkSky = new \Oliver\Weather\DarkSky();
+                $curl = new \Oliver\Curl\Curl();
+                $darkSky = new \Oliver\DarkSky\DarkSky($curl);
                 $darkSky->setDI($this);
 
                 // Load the configuration files
                 $cfg = $this->get("configuration");
-                $config = $cfg->load("api");
-
-                $darkSky->configure($config["config"]["darksky"]);
-
+                $config = $cfg->load("darkSky/config.php");
+                $darkSky->configure($config["config"]);
                 return $darkSky;
             }
         ],
