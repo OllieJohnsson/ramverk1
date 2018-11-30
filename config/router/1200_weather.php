@@ -10,8 +10,13 @@ return [
             "handler" => "\Oliver\Controller\WeatherController",
         ],
         [
+            "info" => "Väder",
+            "path" => "history",
+            "handler" => "\Oliver\Controller\WeatherController",
+        ],
+        [
             "info" => "Väder rest API",
-            "mount" => "rest-api",
+            "mount" => "api",
             "handler" => "\Oliver\Controller\WeatherJsonController",
         ],
         [

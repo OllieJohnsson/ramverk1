@@ -6,7 +6,8 @@ use Anax\Commons\ContainerInjectableTrait;
 
 use Oliver\Weather\Weather;
 use Oliver\Weather\Exception\BadFormatException;
-use Oliver\Weather\Exception\InvalidLocationException;
+use Oliver\DarkSky\Exception\InvalidLocationException;
+use Oliver\DarkSky\Exception\NoHistoryException;
 
 /**
  *
@@ -15,11 +16,8 @@ class WeatherController implements ContainerInjectableInterface
 {
     use ContainerInjectableTrait;
 
-    private $weather;
-    private $message;
-
     private $title = "Väder";
-    private $description = "<p>Sök efter en eller flera platser och få en väderprognos för den kommande veckan";
+    private $description = "<p>Sök efter en plats och få en väderprognos för den kommande veckan eller historik 30 dagar tillbaka.";
 
 
     public function indexActionGet() : object
@@ -35,8 +33,7 @@ class WeatherController implements ContainerInjectableInterface
     }
 
 
-
-    public function indexActionPost()
+    public function indexActionPost() : object
     {
         $request = $this->di->get("request");
         $response = $this->di->get("response");
@@ -45,6 +42,7 @@ class WeatherController implements ContainerInjectableInterface
         $darkSky = $this->di->get("darkSky");
 
         $coordinates = $request->getPost("coordinates");
+        $option = $request->getPost("option");
 
         $page->add("weather/index", [
             "title" => $this->title,
@@ -52,27 +50,16 @@ class WeatherController implements ContainerInjectableInterface
         ]);
 
         try {
-            $this->weather = new Weather($darkSky);
-
-            $page->add("weather/location", [
-                "weather" => $this->weather->fetchWeather($coordinates)
+            $weather = new Weather($darkSky);
+            $result = $weather->fetchWeather($coordinates, $option);
+            $page->add("weather/$option", [
+                "weather" => $result
             ]);
-        } catch (BadFormatException | InvalidLocationException $e) {
-            $this->message = $e->getMessage();
-            $session->set("flashmessage", $this->message);
+        } catch (BadFormatException | InvalidLocationException | NoHistoryException $e) {
+            $session->set("flashmessage", $e->getMessage());
         }
         return $page->render([
             "title" => $this->title
         ]);
-    }
-
-
-    public function getWeather()
-    {
-        return $this->weather;
-    }
-    public function getMessage()
-    {
-        return $this->message;
     }
 }

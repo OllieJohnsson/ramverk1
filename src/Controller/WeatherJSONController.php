@@ -7,17 +7,17 @@ use Oliver\Weather\Weather;
 
 use Oliver\Weather\Exception\BadFormatException;
 use Oliver\Weather\Exception\InvalidLocationException;
+use Oliver\Weather\Exception\NoHistoryException;
 
 /**
  *
  */
-class WeatherJSONController implements ContainerInjectableInterface
+class WeatherJsonController implements ContainerInjectableInterface
 {
     use ContainerInjectableTrait;
 
-    private $weather;
     private $title = "Väder (REST API)";
-    private $description = "<p>Sök efter en eller flera platser och få en väderprognos för den kommande veckan i JSON-format.";
+    private $description = "<p>Sök efter en plats och få en väderprognos för den kommande veckan eller historik 30 dagar tillbaka i JSON-format.";
 
 
     public function indexActionGet() : object
@@ -37,18 +37,32 @@ class WeatherJSONController implements ContainerInjectableInterface
         $request = $this->di->get("request");
         $response = $this->di->get("response");
         $coordinates = $request->getPost("coordinates");
+        $option = $request->getPost("option");
 
-        $route = "weather/rest-api/coordinates/{$coordinates}";
+        $route = "weather/api/$option/{$coordinates}";
         $response->redirect($route);
         return $route;
     }
 
-    public function coordinatesActionGet($coordinates) : array
+    public function historyActionGet($coordinates) : array
     {
         try {
             $darkSky = $this->di->get("darkSky");
-            $this->weather = new Weather($darkSky);
-            return $this->weather->fetchWeather($coordinates, true);
+            $weather = new Weather($darkSky);
+            $result = $weather->fetchWeather($coordinates, "history");
+            return [$result];
+        } catch (BadFormatException | InvalidLocationException | NoHistoryException $e) {
+            return [["error" => $e->getMessage()]];
+        }
+    }
+
+    public function forecastActionGet($coordinates) : array
+    {
+        try {
+            $darkSky = $this->di->get("darkSky");
+            $weather = new Weather($darkSky);
+            $result = $weather->fetchWeather($coordinates, "forecast");
+            return [$result];
         } catch (BadFormatException | InvalidLocationException $e) {
             return [["error" => $e->getMessage()]];
         }

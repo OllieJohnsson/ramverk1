@@ -1,5 +1,5 @@
 <?php
-namespace Oliver\Weather\Exception;
+namespace Oliver\DarkSky\Exception;
 
 /**
  * Coordinates are invalid.

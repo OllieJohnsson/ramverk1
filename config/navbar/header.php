@@ -104,7 +104,7 @@ return [
                     ],
                     [
                         "text" => "REST API",
-                        "url" => "weather/rest-api",
+                        "url" => "weather/api",
                         "title" => "Väder REST API",
                     ],
                     [

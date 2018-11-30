@@ -7,7 +7,7 @@ use Oliver\Controller\WeatherJSONController;
 /**
  * Test the SampleController.
  */
-class WeatherJSONControllerTest extends TestCase
+class WeatherJsonControllerTest extends TestCase
 {
 
     // Create the di container.
@@ -29,7 +29,7 @@ class WeatherJSONControllerTest extends TestCase
         $di = $this->di;
 
         // Setup the controller
-        $this->controller = new WeatherJSONController();
+        $this->controller = new WeatherJsonController();
         $this->controller->setDI($this->di);
     }
 
@@ -39,8 +39,8 @@ class WeatherJSONControllerTest extends TestCase
      */
     public function testIndexActionGet()
     {
-        $res = $this->controller->indexActionGet()->getBody();
-        $this->assertContains("Väder (REST API)", $res);
+        $res = $this->controller->indexActionGet();
+        $this->assertContains("Väder (REST API)", $res->getBody());
     }
 
     /**
@@ -48,51 +48,46 @@ class WeatherJSONControllerTest extends TestCase
      */
     public function testIndexActionPost()
     {
-        $this->di->get("request")->setGlobals(["post" => ["coordinates" => "12,12"]]);
+        $this->di->get("request")->setGlobals(["post" => ["coordinates" => "12,12", "option" => "history"]]);
         $res = $this->controller->indexActionPost("12,12");
-        $this->assertEquals($res, "weather/rest-api/coordinates/12,12");
-    }
-
-    /**
-     * Test latitude and longitude.
-     */
-    public function testLatLong()
-    {
-        $this->di->get("request")->setGlobals(["post" => ["coordinates" => "12,12"]]);
-        $res = $this->controller->coordinatesActionGet("12,12");
-
-        $this->assertEquals($res[0][0]["latitude"], "12");
-        $this->assertEquals($res[0][0]["longitude"], "12");
+        $this->assertEquals($res, "weather/api/history/12,12");
     }
 
 
     /**
-     * Test the error message if latitude has wrong format.
+     * Test the route "history".
      */
-    public function testLatitudeFormat()
+    public function testHistoryActionGet()
     {
-        // $this->di->get("request")->setGlobals(["post" => ["coordinates" => "fel,123"]]);
-        $res = $this->controller->coordinatesActionGet("fel,123");
-        $this->assertEquals($res[0]["error"], "Latituden <b>fel</b> har fel format.");
+        $res = $this->controller->historyActionGet("13,55");
+        $this->assertContains($res[0][0]["timezone"], "Asia/Aden");
     }
 
     /**
-     * Test the error message if longitude has wrong format.
+     * Test the that route "history" fails.
      */
-    public function testLongitudeFormat()
+    public function testHistoryActionGetFail()
     {
-        // $this->di->get("request")->setGlobals(["post" => ["coordinates" => "12,lala"]]);
-        $res = $this->controller->coordinatesActionGet("12,lala");
-        $this->assertEquals($res[0]["error"], "Longituden <b>lala</b> har fel format.");
+        $res = $this->controller->historyActionGet("1300");
+        $this->assertArrayHasKey("error", $res[0]);
+    }
+
+
+    /**
+     * Test the route "forecast".
+     */
+    public function testForecastActionGet()
+    {
+        $res = $this->controller->forecastActionGet("13,55");
+        $this->assertContains($res[0]["timezone"], "Asia/Aden");
     }
 
     /**
-     * Test the error message if coordinates are invalid.
+     * Test the that route "forecast" fails.
      */
-    public function testInvalidCoordinates()
+    public function testForecastActionGetFail()
     {
-        // $this->di->get("request")->setGlobals(["post" => ["coordinates" => "1000,1000"]]);
-        $res = $this->controller->coordinatesActionGet("1000,1000");
-        $this->assertEquals($res[0]["error"], "Platsen hittades inte.<br>Latitud: <b>1000</b><br>Longitud: <b>1000</b>");
+        $res = $this->controller->forecastActionGet("1300");
+        $this->assertArrayHasKey("error", $res[0]);
     }
 }

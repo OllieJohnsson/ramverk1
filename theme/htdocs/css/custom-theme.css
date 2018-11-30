@@ -196,10 +196,12 @@ article .figure.right {
 form {
   margin: 2rem auto;
 }
-input {
+input,
+select {
   padding: 0 0.5rem;
   border-radius: 0.3rem;
   border: 1px solid #ccc;
+  margin: 0 0.5rem;
 }
 .input-row {
   display: flex;
