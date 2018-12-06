@@ -57,38 +57,4 @@ class SampleControllerTest extends TestCase
         $this->assertContains("request", $res);
         $this->assertContains("response", $res);
     }
-
-
-    /**
-     * Test the route "create get".
-     */
-    public function testCreateActionGet()
-    {
-        $controller = new SampleController();
-        $controller->initialize();
-        $res = $controller->createActionGet();
-        $this->assertContains("db is active", $res);
-    }
-
-    /**
-     * Test the route "create post".
-     */
-    public function testCreateActionPost()
-    {
-        $controller = new SampleController();
-        $controller->initialize();
-        $res = $controller->createActionPost();
-        $this->assertContains("db is active", $res);
-    }
-
-    /**
-     * Test the route "argument".
-     */
-    public function testArgumentActionGet()
-    {
-        $controller = new SampleController();
-        $controller->initialize();
-        $res = $controller->argumentActionGet("test");
-        $this->assertContains("got argument 'test'", $res);
-    }
 }

@@ -35,7 +35,7 @@ namespace Anax\View;
 
 <h3>Prognos</h3>
 <div class="container-row" style="overflow: scroll; width: 45rem; margin-bottom: 6rem;">
-    <?php foreach ($weather["daily"]["data"] as $day): ?>
+    <?php foreach ($weather["daily"]["data"] as $day) : ?>
             <div class="info">
                 <table>
                     <h3 nowrap><?= date("Y-m-d", $day["time"])." ".$day["icon"] ?></h3>

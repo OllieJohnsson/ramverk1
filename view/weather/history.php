@@ -8,7 +8,7 @@
 
 <h3>Historik</h3>
 <div class="container-row" style="overflow: scroll; width: 45rem; margin-bottom: 6rem;">
-    <?php foreach ($weather as $day): ?>
+    <?php foreach ($weather as $day) : ?>
             <div class="info">
                 <table>
                     <h3 nowrap><?= date("Y-m-d", $day["daily"]["data"][0]["time"])." ".$day["daily"]["data"][0]["icon"] ?></h3>
