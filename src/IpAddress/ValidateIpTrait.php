@@ -1,5 +1,5 @@
 <?php
-namespace Oliver\Commons;
+namespace Oliver\IpAddress;
 
 /**
  *

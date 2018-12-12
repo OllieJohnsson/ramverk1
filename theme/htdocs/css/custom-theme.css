@@ -16,6 +16,9 @@ ul {
 h1 {
   border: none;
 }
+.align-left {
+  text-align: left;
+}
 .region-header {
   display: flex;
   align-items: center;
@@ -223,4 +226,24 @@ select {
 .outer-wrap-footer a {
   color: #afafaf;
   text-decoration: none;
+}
+table {
+  background-color: #eee;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  color: #444;
+  border-collapse: collapse;
+  padding: 2rem;
+  border-radius: 0.5rem;
+}
+td,
+th {
+  padding: 2rem;
+  background-color: #eee;
+}
+td {
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+.bookCover {
+  width: 24rem;
+  object-fit: contain;
 }

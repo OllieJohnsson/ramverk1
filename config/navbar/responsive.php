@@ -31,6 +31,21 @@ return [
                         "url" => "redovisning/kmom02",
                         "title" => "Redovisning för kmom02.",
                     ],
+                    [
+                        "text" => "Kmom03",
+                        "url" => "redovisning/kmom03",
+                        "title" => "Redovisning för kmom03.",
+                    ],
+                    [
+                        "text" => "Kmom04",
+                        "url" => "redovisning/kmom04",
+                        "title" => "Redovisning för kmom04.",
+                    ],
+                    [
+                        "text" => "Kmom05",
+                        "url" => "redovisning/kmom05",
+                        "title" => "Redovisning för kmom05.",
+                    ],
                 ],
             ],
         ],
@@ -39,16 +54,16 @@ return [
             "url" => "om",
             "title" => "Om denna webbplats.",
         ],
-        [
-            "text" => "Styleväljare",
-            "url" => "style",
-            "title" => "Välj stylesheet.",
-        ],
-        [
-            "text" => "Verktyg",
-            "url" => "verktyg",
-            "title" => "Verktyg och möjligheter för utveckling.",
-        ],
+        // [
+        //     "text" => "Styleväljare",
+        //     "url" => "style",
+        //     "title" => "Välj stylesheet.",
+        // ],
+        // [
+        //     "text" => "Verktyg",
+        //     "url" => "verktyg",
+        //     "title" => "Verktyg och möjligheter för utveckling.",
+        // ],
         [
             "text" => "IP-validator",
             "url" => "ip-validator",
@@ -86,6 +101,35 @@ return [
                     ],
                 ],
             ],
+        ],
+        [
+            "text" => "Väder",
+            "url" => "weather",
+            "title" => "Väder",
+            "submenu" => [
+                "items" => [
+                    [
+                        "text" => "Start",
+                        "url" => "weather",
+                        "title" => "Väder",
+                    ],
+                    [
+                        "text" => "REST API",
+                        "url" => "weather/api",
+                        "title" => "Väder REST API",
+                    ],
+                    [
+                        "text" => "Dokumentation",
+                        "url" => "weather/documentation",
+                        "title" => "Väder Dokumentation",
+                    ],
+                ],
+            ],
+        ],
+        [
+            "text" => "Böcker",
+            "url" => "book",
+            "title" => "Böcker",
         ],
     ],
 ];

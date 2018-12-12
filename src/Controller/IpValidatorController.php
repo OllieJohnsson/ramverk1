@@ -4,7 +4,7 @@ namespace Oliver\Controller;
 
 use Anax\Commons\ContainerInjectableInterface;
 use Anax\Commons\ContainerInjectableTrait;
-use Oliver\Commons\ValidateIpTrait;
+use Oliver\IpAddress\ValidateIpTrait;
 
 // use Anax\Route\Exception\ForbiddenException;
 // use Anax\Route\Exception\NotFoundException;
