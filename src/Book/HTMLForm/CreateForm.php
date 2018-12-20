@@ -43,6 +43,7 @@ class CreateForm extends FormModel
                 "submit" => [
                     "type" => "submit",
                     "value" => "Create item",
+                    "class" => "button",
                     "callback" => [$this, "callbackSubmit"]
                 ],
             ]
@@ -82,15 +83,22 @@ class CreateForm extends FormModel
     }
 
 
+    /**
+     * Callback what to do if the form was unsuccessfully submitted, this
+     * happen when the submit callback method returns false or if validation
+     * fails. This method can/should be implemented by the subclass for a
+     * different behaviour.
+     */
+    public function callbackFail()
+    {
+        $this->di->get("response")->redirectSelf()->send();
+    }
 
-    // /**
-    //  * Callback what to do if the form was unsuccessfully submitted, this
-    //  * happen when the submit callback method returns false or if validation
-    //  * fails. This method can/should be implemented by the subclass for a
-    //  * different behaviour.
-    //  */
-    // public function callbackFail()
-    // {
-    //     $this->di->get("response")->redirectSelf()->send();
-    // }
+
+    public function setValues(string $title, string $author, string $imageUrl)
+    {
+        $this->form->getElement("title")["value"] = $title;
+        $this->form->getElement("author")["value"] = $author;
+        $this->form->getElement("imageUrl")["value"] = $imageUrl;
+    }
 }

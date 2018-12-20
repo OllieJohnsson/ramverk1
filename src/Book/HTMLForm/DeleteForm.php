@@ -34,6 +34,7 @@ class DeleteForm extends FormModel
                 "submit" => [
                     "type" => "submit",
                     "value" => "Delete item",
+                    "class" => "button",
                     "callback" => [$this, "callbackSubmit"]
                 ],
             ]
@@ -101,4 +102,13 @@ class DeleteForm extends FormModel
     // {
     //     $this->di->get("response")->redirectSelf()->send();
     // }
+
+
+    public function setSelected(string $field, string $title)
+    {
+        $book = new Book();
+        $book->setDb($this->di->get("dbqb"));
+        $book->find($field, $title);
+        $this->form->getElement("select")["value"] = $book->id;
+    }
 }

@@ -244,6 +244,6 @@ td {
   border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
 .bookCover {
-  width: 24rem;
+  max-width: 24rem;
   object-fit: contain;
 }

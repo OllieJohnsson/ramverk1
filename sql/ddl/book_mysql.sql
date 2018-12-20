@@ -12,7 +12,7 @@
 -- CREATE DATABASE IF NOT EXISTS anaxdb;
 -- CREATE USER IF NOT EXISTS 'user'@'localhost' IDENTIFIED BY 'pass';
 -- GRANT ALL ON anaxdb.* TO 'user'@'localhost';
-USE anaxdb;
+-- USE anaxdb;
 
 
 
@@ -38,3 +38,14 @@ CREATE TABLE Book (
     `author` VARCHAR(256) NOT NULL,
     `imageUrl` VARCHAR(256)
 ) ENGINE INNODB CHARACTER SET utf8 COLLATE utf8_swedish_ci;
+
+
+
+DELETE FROM Book;
+INSERT INTO Book (`title`, `author`, `imageUrl`)
+VALUES
+('P Is for Pterodactyl', 'Raj Haldar, Chris Carpenter', 'https://image.bokus.com/images/9781492674313_200x_p-is-for-pterodactyl'),
+('Julens allra godaste', 'Pernilla Qvist', 'https://image.bokus.com/images/9789113087528_200x_julens-allra-godaste-kockarnas-basta-recept'),
+('Resultat, balans och lite mag', 'Mårten Nylén', 'https://s2.adlibris.com/images/43972034/marten-nylen-resultat-balans-och-lite-magi.jpg'),
+('Det här kommer göra ont', 'Adam Kay', 'https://s2.adlibris.com/images/43675521/det-har-kommer-gora-ont.jpg'),
+('Liv 3.0', 'Max Tegmark', 'https://image.bokus.com/images/9789188123985_200x_liv-30-att-vara-manniska-i-den-artificiella-intelligensens-tid')

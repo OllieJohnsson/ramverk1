@@ -30,7 +30,7 @@
 // ];
 
 
-$serverName = isset($_SERVER['SERVER_NAME']) ?? null;
+$serverName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : null;
 
 if ($serverName === "www.student.bth.se") {
     return [
@@ -45,10 +45,10 @@ if ($serverName === "www.student.bth.se") {
         "session_key"     => "Anax\Database",
 
         // True to be very verbose during development
-        "verbose"         => false,
+        "verbose"         => null,
 
         // True to be verbose on connection failed
-        "debug_connect"   => true,
+        "debug_connect"   => false,
 
         "mysql"           => "/usr/bin/mysql"
     ];
